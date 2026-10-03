@@ -43,6 +43,7 @@ private slots:
   void tst_invalidLabel();
   void tst_directives();
   void tst_stringDirectives();
+  void tst_floatingBitDirectives();
   void tst_riscv();
   void tst_relativeLabels();
 
@@ -98,6 +99,27 @@ private:
     }
   }
 };
+
+void tst_Assembler::tst_floatingBitDirectives() {
+  testAssemble({".data", ".float 5.0, 0x40A00000, 0b01000000101000000000000000000000",
+                ".double 5.0, 0x4014000000000000, 0b0100000000010100000000000000000000000000000000000000000000000000"},
+               Expect::Success,
+               QByteArray::fromHex("0000a0400000a0400000a040"
+                                   "000000000000144000000000000014400000000000001440"));
+  testAssemble({".data", ".float 0xFFFFFFFF", ".double 0xFFFFFFFFFFFFFFFF"},
+               Expect::Success, QByteArray(12, char(0xff)));
+  testAssemble({".data", ".float -5, 5e0, 0X40a00000, 0B01000000101000000000000000000000",
+                ".double -5, 5e0, 0X4014000000000000"},
+               Expect::Success,
+               QByteArray::fromHex("0000a0c00000a0400000a0400000a040"
+                                   "00000000000014c000000000000014400000000000001440"));
+  for (const auto &line : {".float 0x100000000", ".double 0x10000000000000000",
+                           ".float 0b100000000000000000000000000000000",
+                           ".double 0b10000000000000000000000000000000000000000000000000000000000000000",
+                           ".float 0x", ".double 0b", ".float 0xGG", ".double 0b102"}) {
+    testAssemble({".data", line}, Expect::Fail);
+  }
+}
 
 struct RVTestTuple {
   ProcessorID id;
