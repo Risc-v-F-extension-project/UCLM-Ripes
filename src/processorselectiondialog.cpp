@@ -100,9 +100,14 @@ ProcessorSelectionDialog::ProcessorSelectionDialog(QWidget *parent)
 
   // Update extension checkboxes
   auto isaInfo = desc.isaInfo();
+  const bool supportsDSelection = isaInfo.isa->bits() == 64;
+  if (!supportsDSelection)
+    m_selectedExtensionsForID[desc.id].removeAll("D");
   for (const auto &ext : std::as_const(isaInfo.supportedExtensions)) {
     auto chkbox = new QCheckBox(ext);
     chkbox->setToolTip(isaInfo.isa->extensionDescription(ext));
+    if (ext == "D")
+      chkbox->setEnabled(supportsDSelection);
     m_ui->extensions->addWidget(chkbox);
     if (m_selectedExtensionsForID[desc.id].contains(ext)) {
       chkbox->setChecked(true);
@@ -295,9 +300,14 @@ void ProcessorSelectionDialog::updateDialog(ISA isa, ProcessorTags tags) {
   }
 
   auto isaInfo = desc.isaInfo();
+  const bool supportsDSelection = isaInfo.isa->bits() == 64;
+  if (!supportsDSelection)
+    m_selectedExtensionsForID[desc.id].removeAll("D");
   for (const auto &ext : std::as_const(isaInfo.supportedExtensions)) {
     auto chkbox = new QCheckBox(ext);
     chkbox->setToolTip(isaInfo.isa->extensionDescription(ext));
+    if (ext == "D")
+      chkbox->setEnabled(supportsDSelection);
     m_ui->extensions->addWidget(chkbox);
     if (m_selectedExtensionsForID[desc.id].contains(ext)) {
       chkbox->setChecked(true);
@@ -345,7 +355,7 @@ void ProcessorSelectionDialog::setupFALULatencyOptions() {
   grid->setHorizontalSpacing(10);
   grid->setVerticalSpacing(4);
 
-  const QStringList headers = {"Type", "Latency", "Count", "Seg."};
+  const QStringList headers = {"Type", "Latency", "Amount", "Seg."};
   for (int column = 0; column < headers.size(); ++column) {
     auto *header = new QLabel(headers.at(column));
     header->setContentsMargins(0, 12, 0, 0);
@@ -354,33 +364,46 @@ void ProcessorSelectionDialog::setupFALULatencyOptions() {
 
   auto addUnitRow = [grid](int row, const QString &name,
                            QSpinBox *&latency, const QString &latencySetting,
+                           unsigned maximumLatency,
                            QSpinBox *&count, const QString &countSetting,
                            QCheckBox *&segmented,
                            const QString &segmentedSetting) {
     grid->addWidget(new QLabel(name), row, 0);
     latency = new QSpinBox;
-    latency->setRange(1, 255);
+    // A one-cycle FP operation can publish its anticipated result on the same
+    // edge where a dependent instruction captures its operand. The current
+    // ID/EX forwarding scheme therefore requires at least two cycles.
+    latency->setRange(2, maximumLatency);
     latency->setValue(RipesSettings::value(latencySetting).toUInt());
     grid->addWidget(latency, row, 1);
     count = new QSpinBox;
-    count->setRange(1, 32);
+    count->setRange(1, 4);
     count->setValue(RipesSettings::value(countSetting).toUInt());
     grid->addWidget(count, row, 2);
     segmented = new QCheckBox;
     segmented->setChecked(RipesSettings::value(segmentedSetting).toBool());
     grid->addWidget(segmented, row, 3);
+
+    const auto updateCountAvailability = [count](bool isSegmented) {
+      if (isSegmented)
+        count->setValue(1);
+      count->setEnabled(!isSegmented);
+    };
+    QObject::connect(segmented, &QCheckBox::toggled,
+                     updateCountAvailability);
+    updateCountAvailability(segmented->isChecked());
   };
 
-  addUnitRow(1, "add/sub", m_faluAddSubLatency,
-             RIPES_SETTING_RV5S_FALU_ADDSUB_LATENCY, m_faluAddSubCount,
+  addUnitRow(1, "Add", m_faluAddSubLatency,
+             RIPES_SETTING_RV5S_FALU_ADDSUB_LATENCY, 7, m_faluAddSubCount,
              RIPES_SETTING_RV5S_FALU_ADDSUB_COUNT, m_faluAddSubPipelined,
              RIPES_SETTING_RV5S_FALU_ADDSUB_PIPELINED);
-  addUnitRow(2, "mul", m_faluMulLatency,
-             RIPES_SETTING_RV5S_FALU_MUL_LATENCY, m_faluMulCount,
+  addUnitRow(2, "Mul", m_faluMulLatency,
+             RIPES_SETTING_RV5S_FALU_MUL_LATENCY, 12, m_faluMulCount,
              RIPES_SETTING_RV5S_FALU_MUL_COUNT, m_faluMulPipelined,
              RIPES_SETTING_RV5S_FALU_MUL_PIPELINED);
-  addUnitRow(3, "div", m_faluDivLatency,
-             RIPES_SETTING_RV5S_FALU_DIV_LATENCY, m_faluDivCount,
+  addUnitRow(3, "Div", m_faluDivLatency,
+             RIPES_SETTING_RV5S_FALU_DIV_LATENCY, 30, m_faluDivCount,
              RIPES_SETTING_RV5S_FALU_DIV_COUNT, m_faluDivPipelined,
              RIPES_SETTING_RV5S_FALU_DIV_PIPELINED);
 
@@ -401,6 +424,13 @@ void ProcessorSelectionDialog::updateFALULatencyOptionsEnabled() {
 void ProcessorSelectionDialog::handleExtensionToggled(const QString &ext,
                                                       bool toggled) {
   QStringList &extensions = m_selectedExtensionsForID[m_selectedID];
+
+  if (ext == "D" && toggled &&
+      ProcessorRegistry::getDescription(m_selectedID).isaInfo().isa->bits() != 64) {
+    extensions.removeAll("D");
+    setExtensionCheckboxChecked("D", false);
+    return;
+  }
 
   if (toggled) {
     if (!extensions.contains(ext)) {
@@ -430,30 +460,7 @@ void ProcessorSelectionDialog::enableDExtensionDependencies() {
   }
   setExtensionCheckboxChecked("F", true);
 
-  if (m_ui->xlen->currentData().toInt() == 64) {
-    return;
-  }
 
-  const int rv64Index = m_ui->xlen->findData(64);
-  if (rv64Index < 0) {
-    return;
-  }
-
-  m_ui->xlen->setCurrentIndex(rv64Index);
-
-  const ISA rv64ISA = static_cast<ISA>(
-      m_ui->isa->currentData().toInt() + m_ui->xlen->currentIndex());
-  const QList<ProcessorID> rv64Processors =
-      ProcessorRegistry::getProcessor(rv64ISA, m_selectedTags);
-  for (const ProcessorID id : rv64Processors) {
-    QStringList &rv64Extensions = m_selectedExtensionsForID[id];
-    if (!rv64Extensions.contains("D")) {
-      rv64Extensions << "D";
-    }
-    if (!rv64Extensions.contains("F")) {
-      rv64Extensions << "F";
-    }
-  }
 }
 
 void ProcessorSelectionDialog::disableDExtensionForCurrentSelection() {

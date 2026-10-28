@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <cstring>
+#include <limits>
 
 namespace Ripes {
 namespace Assembler {
@@ -110,6 +111,31 @@ Result<QByteArray> stringFunctor(const AssemblerBase *,
   return {string.toUtf8().append('\0')};
 }
 
+// Prefixed literals specify raw IEEE 754 bits, not numeric conversions.
+template <typename UInt>
+static bool parseFloatingBits(const QString &token, UInt &bits, bool &prefixed) {
+  prefixed = token.startsWith("0x", Qt::CaseInsensitive) ||
+             token.startsWith("0b", Qt::CaseInsensitive);
+  if (!prefixed)
+    return false;
+  const int base = token.at(1).toLower() == QChar('x') ? 16 : 2;
+  const QString digits = token.mid(2);
+  if (digits.isEmpty())
+    return false;
+  for (const QChar digit : digits) {
+    const QChar lower = digit.toLower();
+    if (!(digit >= QChar('0') && digit <= QChar(base == 2 ? '1' : '9')) &&
+        !(base == 16 && lower >= QChar('a') && lower <= QChar('f')))
+      return false;
+  }
+  bool ok = false;
+  const qulonglong value = digits.toULongLong(&ok, base);
+  if (!ok || value > std::numeric_limits<UInt>::max())
+    return false;
+  bits = static_cast<UInt>(value);
+  return true;
+}
+
 Directive floatDirective() {
   auto floatFunctor =
       [](
@@ -123,14 +149,17 @@ Directive floatDirective() {
     QByteArray bytes;
     for(const auto &token: arg.line.tokens){
       bool ok = false;
-      const float f = token.toFloat(&ok);
-      //const float f = QLocale::c().toFloat(token, &ok);
       uint32_t u = 0;
-      if (ok) {
+      bool prefixed = false;
+      ok = parseFloatingBits(token, u, prefixed);
+      if (!prefixed) {
+        const float f = token.toFloat(&ok);
         static_assert(sizeof(float) == sizeof(uint32_t), "The float argument and the casted representation of float value in binary must be the same size");
-        std::memcpy(&u,&f, sizeof(uint32_t));
-      } else {
-        return {Error(arg.line, QString("Invalid float value format as argument. You introduced %1").arg(token))};
+        if (ok)
+          std::memcpy(&u,&f, sizeof(uint32_t));
+      }
+      if (!ok) {
+        return {Error(arg.line, QString("Invalid float value '%1': expected a decimal value or a 32-bit 0x/0b bit pattern").arg(token))};
       }
       for (int i = 0; i< 4; ++i) {
         bytes.append(static_cast<char>(u & 0xffu));
@@ -155,13 +184,17 @@ Directive doubleFloatDirective() {
     QByteArray bytes;
     for(const auto &token: arg.line.tokens){
       bool ok = false;
-      const double d = token.toDouble(&ok);
       uint64_t u = 0;
-      if (ok) {
+      bool prefixed = false;
+      ok = parseFloatingBits(token, u, prefixed);
+      if (!prefixed) {
+        const double d = token.toDouble(&ok);
         static_assert(sizeof(double) == sizeof(uint64_t), "The double argument and the casted representation of double value in binary must be the same size");
-        std::memcpy(&u, &d, sizeof(uint64_t));
-      } else {
-        return {Error(arg.line, QString("Invalid double value format as argument. You introduced %1").arg(token))};
+        if (ok)
+          std::memcpy(&u, &d, sizeof(uint64_t));
+      }
+      if (!ok) {
+        return {Error(arg.line, QString("Invalid double value '%1': expected a decimal value or a 64-bit 0x/0b bit pattern").arg(token))};
       }
       for (int i = 0; i < 8; ++i) {
         bytes.append(static_cast<char>(u & 0xffu));
