@@ -435,7 +435,17 @@ public:
     m_syscallExitCycle = -1;
   }
 
-  static ProcessorISAInfo supportsISA() { return RVISA::supportsISA<XLEN>(); }
+  static ProcessorISAInfo supportsISA() {
+    //return RVISA::supportsISA<XLEN>();
+    auto isaInfo = RVISA::supportsISA<XLEN>();
+
+    isaInfo.supportedExtensions.removeAll("F");
+    isaInfo.defaultExtensions.removeAll("F");
+    isaInfo.supportedExtensions.removeAll("D");
+    isaInfo.defaultExtensions.removeAll("D");
+    
+    return isaInfo;
+  }
   std::shared_ptr<ISAInfoBase> implementsISA() const override {
     return m_enabledISA;
   }

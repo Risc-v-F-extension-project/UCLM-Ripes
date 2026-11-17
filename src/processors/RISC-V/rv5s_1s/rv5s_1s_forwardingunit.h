@@ -13,10 +13,10 @@ namespace vsrtl {
 namespace core {
 using namespace Ripes;
 
-class ForwardingUnit_1S : public ForwardingUnit {
+class ForwardingUnit_1S : public RV5SForwardingUnit {
 public:
   ForwardingUnit_1S(const std::string &name, SimComponent *parent)
-      : ForwardingUnit(name, parent ) {
+      : RV5SForwardingUnit(name, parent) {
     branch_op1_fwctrl << [this] { return getFwSrc(if_reg1_idx.uValue()); };
     branch_op2_fwctrl << [this] { return getFwSrc(if_reg2_idx.uValue()); };
   }
