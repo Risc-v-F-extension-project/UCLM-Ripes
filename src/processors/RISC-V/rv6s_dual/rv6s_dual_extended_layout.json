@@ -10122,7 +10122,7 @@
                             "value": 25
                         },
                         {
-                            "key": "falures_in",
+                            "key": "fp_alures_in",
                             "value": 15
                         },
                         {
@@ -10231,7 +10231,7 @@
                             "value": 14
                         },
                         {
-                            "key": "falures_out",
+                            "key": "fp_alures_out",
                             "value": 12
                         },
                         {
@@ -10753,14 +10753,14 @@
                 "UserHidden": true,
                 "PortWidthVisible": false
             },
-            "falures_in": {
+            "fp_alures_in": {
                 "Label": {
                     "Visible": false,
                     "Bold": false,
                     "Italic": false,
                     "PtSize": 8,
                     "Text": {
-                        "str": "falures_in"
+                        "str": "fp_alures_in"
                     },
                     "Pos": {
                         "x": 0.0,
@@ -11585,14 +11585,14 @@
                 "UserHidden": true,
                 "PortWidthVisible": false
             },
-            "falures_out": {
+            "fp_alures_out": {
                 "Label": {
                     "Visible": false,
                     "Bold": false,
                     "Italic": false,
                     "PtSize": 8,
                     "Text": {
-                        "str": "falures_out"
+                        "str": "fp_alures_out"
                     },
                     "Pos": {
                         "x": 42.0,
@@ -12781,12 +12781,12 @@
                 "points": [],
                 "wires": []
             },
-            "falures_in_in_wire": {
+            "fp_alures_in_in_wire": {
                 "Parent": "exmem_reg",
                 "From port": {
                     "first": 0,
                     "second": [
-                        "falures_in",
+                        "fp_alures_in",
                         "exmem_reg"
                     ]
                 },
@@ -15188,8 +15188,8 @@
                 },
                 "Indicators": []
             },
-            "falures_reg": {
-                "Top name": "falures_reg",
+            "fp_alures_reg": {
+                "Top name": "fp_alures_reg",
                 "Rect": {
                     "x": 0,
                     "y": 0,
@@ -15365,14 +15365,14 @@
                         "first": 0,
                         "second": [
                             "out",
-                            "falures_reg"
+                            "fp_alures_reg"
                         ]
                     },
                     "To ports": [
                         {
                             "key": 1,
                             "value": [
-                                "falures_out",
+                                "fp_alures_out",
                                 "exmem_reg"
                             ]
                         }
@@ -15414,7 +15414,7 @@
                     "Italic": false,
                     "PtSize": 12,
                     "Text": {
-                        "str": "falures_reg"
+                        "str": "fp_alures_reg"
                     },
                     "Pos": {
                         "x": -22.421875,
@@ -19328,7 +19328,7 @@
                             "key": 13,
                             "value": [
                                 "enable",
-                                "falures_reg"
+                                "fp_alures_reg"
                             ]
                         },
                         {
@@ -19491,7 +19491,7 @@
                             "key": 1,
                             "value": [
                                 "in",
-                                "falures_reg"
+                                "fp_alures_reg"
                             ]
                         }
                     ],
@@ -20385,7 +20385,7 @@
                             "key": 13,
                             "value": [
                                 "clear",
-                                "falures_reg"
+                                "fp_alures_reg"
                             ]
                         },
                         {
@@ -22068,12 +22068,12 @@
                     }
                 ]
             },
-            "falures_out_out_wire": {
+            "fp_alures_out_out_wire": {
                 "Parent": "6-Stage dual-issue RISC-V Processor",
                 "From port": {
                     "first": 0,
                     "second": [
-                        "falures_out",
+                        "fp_alures_out",
                         "exmem_reg"
                     ]
                 },
@@ -56241,16 +56241,12 @@
                             "value": 21
                         },
                         {
-                            "key": "falures_in",
+                            "key": "fp_alures_in",
                             "value": 9
                         },
                         {
                             "key": "fp_reg_do_write_in",
                             "value": 7
-                        },
-                        {
-                            "key": "mem_op_in",
-                            "value": 15
                         },
                         {
                             "key": "mem_read_in",
@@ -56326,16 +56322,12 @@
                             "value": 16
                         },
                         {
-                            "key": "falures_out",
+                            "key": "fp_alures_out",
                             "value": 15
                         },
                         {
                             "key": "fp_reg_do_write_out",
                             "value": 13
-                        },
-                        {
-                            "key": "mem_op_out",
-                            "value": 7
                         },
                         {
                             "key": "mem_read_out",
@@ -56552,14 +56544,14 @@
                 "UserHidden": true,
                 "PortWidthVisible": false
             },
-            "falures_in": {
+            "fp_alures_in": {
                 "Label": {
                     "Visible": false,
                     "Bold": false,
                     "Italic": false,
                     "PtSize": 8,
                     "Text": {
-                        "str": "falures_in"
+                        "str": "fp_alures_in"
                     },
                     "Pos": {
                         "x": 0.0,
@@ -56615,38 +56607,6 @@
                 },
                 "UserHidden": false,
                 "PortWidthVisible": true
-            },
-            "mem_op_in": {
-                "Label": {
-                    "Visible": false,
-                    "Bold": false,
-                    "Italic": false,
-                    "PtSize": 8,
-                    "Text": {
-                        "str": "mem_op_in"
-                    },
-                    "Pos": {
-                        "x": 0.0,
-                        "y": 210.0
-                    },
-                    "Alignment": 132
-                },
-                "ValueLabel": {
-                    "Visible": false,
-                    "Bold": false,
-                    "Italic": false,
-                    "PtSize": 10,
-                    "Text": {
-                        "str": "0"
-                    },
-                    "Pos": {
-                        "x": 2094.703125,
-                        "y": 338.0
-                    },
-                    "Alignment": 132
-                },
-                "UserHidden": true,
-                "PortWidthVisible": false
             },
             "reg_do_write_in": {
                 "Label": {
@@ -57256,14 +57216,14 @@
                 "UserHidden": true,
                 "PortWidthVisible": false
             },
-            "falures_out": {
+            "fp_alures_out": {
                 "Label": {
                     "Visible": false,
                     "Bold": false,
                     "Italic": false,
                     "PtSize": 8,
                     "Text": {
-                        "str": "falures_out"
+                        "str": "fp_alures_out"
                     },
                     "Pos": {
                         "x": 42.0,
@@ -57314,38 +57274,6 @@
                     "Pos": {
                         "x": 2173.0,
                         "y": 288.0
-                    },
-                    "Alignment": 132
-                },
-                "UserHidden": true,
-                "PortWidthVisible": false
-            },
-            "mem_op_out": {
-                "Label": {
-                    "Visible": false,
-                    "Bold": false,
-                    "Italic": false,
-                    "PtSize": 8,
-                    "Text": {
-                        "str": "mem_op_out"
-                    },
-                    "Pos": {
-                        "x": 42.0,
-                        "y": 98.0
-                    },
-                    "Alignment": 132
-                },
-                "ValueLabel": {
-                    "Visible": false,
-                    "Bold": false,
-                    "Italic": false,
-                    "PtSize": 10,
-                    "Text": {
-                        "str": "0x0"
-                    },
-                    "Pos": {
-                        "x": 2170.0,
-                        "y": 238.0
                     },
                     "Alignment": 132
                 },
@@ -57894,12 +57822,12 @@
                     }
                 ]
             },
-            "falures_in_in_wire": {
+            "fp_alures_in_in_wire": {
                 "Parent": "memwb_reg",
                 "From port": {
                     "first": 0,
                     "second": [
-                        "falures_in",
+                        "fp_alures_in",
                         "memwb_reg"
                     ]
                 },
@@ -57908,7 +57836,7 @@
                         "key": 1,
                         "value": [
                             "in",
-                            "falures_reg"
+                            "fp_alures_reg"
                         ]
                     }
                 ],
@@ -57988,55 +57916,6 @@
                     },
                     {
                         "first": 3,
-                        "second": 2
-                    }
-                ]
-            },
-            "mem_op_in_in_wire": {
-                "Parent": "memwb_reg",
-                "From port": {
-                    "first": 0,
-                    "second": [
-                        "mem_op_in",
-                        "memwb_reg"
-                    ]
-                },
-                "To ports": [
-                    {
-                        "key": 1,
-                        "value": [
-                            "in",
-                            "mem_op_reg"
-                        ]
-                    }
-                ],
-                "points": [
-                    {
-                        "key": 2,
-                        "value": {
-                            "x": 14,
-                            "y": 112
-                        }
-                    },
-                    {
-                        "key": 3,
-                        "value": {
-                            "x": 14,
-                            "y": 826
-                        }
-                    }
-                ],
-                "wires": [
-                    {
-                        "first": 3,
-                        "second": 1
-                    },
-                    {
-                        "first": 2,
-                        "second": 3
-                    },
-                    {
-                        "first": 0,
                         "second": 2
                     }
                 ]
@@ -59285,8 +59164,8 @@
                 },
                 "Indicators": []
             },
-            "falures_reg": {
-                "Top name": "falures_reg",
+            "fp_alures_reg": {
+                "Top name": "fp_alures_reg",
                 "Rect": {
                     "x": 0,
                     "y": 0,
@@ -59390,14 +59269,14 @@
                         "first": 0,
                         "second": [
                             "out",
-                            "falures_reg"
+                            "fp_alures_reg"
                         ]
                     },
                     "To ports": [
                         {
                             "key": 1,
                             "value": [
-                                "falures_out",
+                                "fp_alures_out",
                                 "memwb_reg"
                             ]
                         }
@@ -59439,7 +59318,7 @@
                     "Italic": false,
                     "PtSize": 12,
                     "Text": {
-                        "str": "falures_reg"
+                        "str": "fp_alures_reg"
                     },
                     "Pos": {
                         "x": -22.421875,
@@ -59607,170 +59486,6 @@
                     },
                     "Pos": {
                         "x": -53.9609375,
-                        "y": -28.0
-                    },
-                    "Alignment": 132
-                },
-                "Indicators": []
-            },
-            "mem_op_reg": {
-                "Top name": "mem_op_reg",
-                "Rect": {
-                    "x": 0,
-                    "y": 0,
-                    "w": 3,
-                    "h": 4
-                },
-                "rot": 0,
-                "Pos": {
-                    "x": 42,
-                    "y": 798
-                },
-                "Visible": false,
-                "User hidden": false,
-                "Component border": [
-                    {
-                        "key": 0,
-                        "value": [
-                            {
-                                "key": "in",
-                                "value": 2
-                            }
-                        ]
-                    },
-                    {
-                        "key": 1,
-                        "value": [
-                            {
-                                "key": "out",
-                                "value": 2
-                            }
-                        ]
-                    }
-                ],
-                "in": {
-                    "Label": {
-                        "Visible": true,
-                        "Bold": false,
-                        "Italic": false,
-                        "PtSize": 8,
-                        "Text": {
-                            "str": "in"
-                        },
-                        "Pos": {
-                            "x": 0.0,
-                            "y": 28.0
-                        },
-                        "Alignment": 132
-                    },
-                    "ValueLabel": {
-                        "Visible": false,
-                        "Bold": false,
-                        "Italic": false,
-                        "PtSize": 10,
-                        "Text": {
-                            "str": "0"
-                        },
-                        "Pos": {
-                            "x": 8.703125,
-                            "y": 814.0
-                        },
-                        "Alignment": 132
-                    },
-                    "UserHidden": false,
-                    "PortWidthVisible": true
-                },
-                "out": {
-                    "Label": {
-                        "Visible": true,
-                        "Bold": false,
-                        "Italic": false,
-                        "PtSize": 8,
-                        "Text": {
-                            "str": "out"
-                        },
-                        "Pos": {
-                            "x": 42.0,
-                            "y": 28.0
-                        },
-                        "Alignment": 132
-                    },
-                    "ValueLabel": {
-                        "Visible": false,
-                        "Bold": false,
-                        "Italic": false,
-                        "PtSize": 10,
-                        "Text": {
-                            "str": "0x0"
-                        },
-                        "Pos": {
-                            "x": 84.0,
-                            "y": 826.0
-                        },
-                        "Alignment": 132
-                    },
-                    "UserHidden": false,
-                    "PortWidthVisible": true
-                },
-                "out_out_wire": {
-                    "Parent": "memwb_reg",
-                    "From port": {
-                        "first": 0,
-                        "second": [
-                            "out",
-                            "mem_op_reg"
-                        ]
-                    },
-                    "To ports": [
-                        {
-                            "key": 1,
-                            "value": [
-                                "mem_op_out",
-                                "memwb_reg"
-                            ]
-                        }
-                    ],
-                    "points": [
-                        {
-                            "key": 2,
-                            "value": {
-                                "x": 98,
-                                "y": 308
-                            }
-                        },
-                        {
-                            "key": 3,
-                            "value": {
-                                "x": 70,
-                                "y": 308
-                            }
-                        }
-                    ],
-                    "wires": [
-                        {
-                            "first": 3,
-                            "second": 1
-                        },
-                        {
-                            "first": 0,
-                            "second": 2
-                        },
-                        {
-                            "first": 2,
-                            "second": 3
-                        }
-                    ]
-                },
-                "Name label": {
-                    "Visible": true,
-                    "Bold": false,
-                    "Italic": false,
-                    "PtSize": 12,
-                    "Text": {
-                        "str": "mem_op_reg"
-                    },
-                    "Pos": {
-                        "x": -28.8671875,
                         "y": -28.0
                     },
                     "Alignment": 132
@@ -62188,12 +61903,12 @@
                 "points": [],
                 "wires": []
             },
-            "falures_out_out_wire": {
+            "fp_alures_out_out_wire": {
                 "Parent": "6-Stage dual-issue RISC-V Processor",
                 "From port": {
                     "first": 0,
                     "second": [
-                        "falures_out",
+                        "fp_alures_out",
                         "memwb_reg"
                     ]
                 },
@@ -62207,19 +61922,6 @@
                     "first": 0,
                     "second": [
                         "reg_wr_src_ctrl_out",
-                        "memwb_reg"
-                    ]
-                },
-                "To ports": [],
-                "points": [],
-                "wires": []
-            },
-            "mem_op_out_out_wire": {
-                "Parent": "6-Stage dual-issue RISC-V Processor",
-                "From port": {
-                    "first": 0,
-                    "second": [
-                        "mem_op_out",
                         "memwb_reg"
                     ]
                 },

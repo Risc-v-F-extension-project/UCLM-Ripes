@@ -289,7 +289,7 @@ ProcessorRegistry::ProcessorRegistry() {
                {{0, 3}, QPointF{0.75, 0}},
                {{0, 4}, QPointF{0.87, 0}}}},
              {"Extended",
-              ":/layouts/RISC-V/rv5s/rv5s_extended_layout.json",
+              ":/layouts/RISC-V/rv5s_2s_db/rv5s_2s_db_extended_layout.json",
               {{{0, 0}, QPointF{0.08, 0}},
                {{0, 1}, QPointF{0.28, 0}},
                {{0, 2}, QPointF{0.54, 0}},
