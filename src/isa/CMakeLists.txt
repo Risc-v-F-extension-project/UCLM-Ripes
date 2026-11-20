@@ -6,6 +6,8 @@ target_sources(isa_lib
     mips32isainfo.h
     rv_f_ext.h
     rv_f_ext.cpp
+    rv_d_ext.h
+    rv_d_ext.cpp
 )
 
 target_link_libraries(isa_lib PUBLIC elfio::elfio vsrtl::vsrtl Signals::Signals)
