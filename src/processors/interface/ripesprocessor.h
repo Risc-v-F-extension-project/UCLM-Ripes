@@ -4,7 +4,10 @@
 
 #include "Signal.h"
 #include "VSRTL/core/vsrtl_design.h"
+#include <array>
+#include <cstdint>
 #include <map>
+#include <vector>
 
 #include "../isa/isa_types.h"
 #include "../isa/isainfo.h"
@@ -30,6 +33,40 @@ struct StageInfo {
   bool operator!=(const StageInfo &other) const { return !(*this == other); }
 };
 
+struct FPUnicicleStageInfo {
+  bool valid = false;
+  AInt pc = 0;
+  unsigned unit = 0;
+  unsigned stage = 0;
+  unsigned instance = 0;
+  uint64_t inputCycle = 0;
+};
+
+struct AdvancedExecutionStatistics {
+  bool available = false;
+  uint64_t instructionMemoryCycles = 0;
+  uint64_t dataMemoryCycles = 0;
+  uint64_t aluCycles = 0;
+  uint64_t integerUnitCycles = 0;
+  uint64_t fpAddSubUnitCycles = 0;
+  uint64_t fpMultiplyUnitCycles = 0;
+  uint64_t fpDivideUnitCycles = 0;
+  std::array<uint64_t, 4> fpAddSubUnitCyclesByInstance{};
+  std::array<uint64_t, 4> fpMultiplyUnitCyclesByInstance{};
+  std::array<uint64_t, 4> fpDivideUnitCyclesByInstance{};
+  uint64_t stallCycles = 0;
+  uint64_t dataHazardStallCycles = 0;
+  uint64_t structuralHazardStallCycles = 0;
+  uint64_t controlHazardDiscardedInstructions = 0;
+  unsigned integerUnitCount = 1;
+  unsigned fpAddSubLatency = 1;
+  unsigned fpMultiplyLatency = 1;
+  unsigned fpDivideLatency = 1;
+  unsigned fpAddSubUnitCount = 1;
+  unsigned fpMultiplyUnitCount = 1;
+  unsigned fpDivideUnitCount = 1;
+};
+
 /// Address is byte-aligned, and the accessed bytes are [address : address +
 /// bytes[
 struct MemoryAccess {
@@ -44,6 +81,15 @@ struct StageIndex : public std::pair<unsigned, unsigned> {
   using std::pair<unsigned, unsigned>::pair;
   unsigned lane() const { return this->first; }
   unsigned index() const { return this->second; }
+};
+
+struct OperandForwardingInfo {
+  AInt producerPC = 0;
+  AInt consumerPC = 0;
+  StageIndex producerStage;
+  StageIndex consumerStage;
+  unsigned operand = 0;
+  bool floatingPoint = false;
 };
 
 /// Structural description of the processor model. Currently this is a map of
@@ -210,6 +256,16 @@ public:
    * the current cycle
    */
   virtual StageInfo stageInfo(StageIndex stageIndex) const = 0;
+
+  virtual std::vector<FPUnicicleStageInfo> fpUnicicleStageInfos() const {
+    return {};
+  }
+  virtual std::vector<OperandForwardingInfo> forwardingInfos() const {
+    return {};
+  }
+  virtual AdvancedExecutionStatistics advancedExecutionStatistics() const {
+    return {};
+  }
 
   /**
    * @brief breakpointTriggeringStages
