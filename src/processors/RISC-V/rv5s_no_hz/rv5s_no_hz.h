@@ -42,7 +42,11 @@ public:
   enum Stage { IF = 0, ID = 1, EX = 2, MEM = 3, WB = 4, STAGECOUNT };
   RV5S_NO_HZ(const QStringList &extensions)
       : RipesVSRTLProcessor("5-Stage RISC-V Processor without forwarding") {
-    m_enabledISA = ISAInfoRegistry::getISA<XLenToRVISA<XLEN>()>(extensions);
+    QStringList classicExtensions = extensions;
+    classicExtensions.removeAll("F");
+    classicExtensions.removeAll("D");
+    m_enabledISA =
+        ISAInfoRegistry::getISA<XLenToRVISA<XLEN>()>(classicExtensions);
     decode->setISA(m_enabledISA);
     uncompress->setISA(m_enabledISA);
 
@@ -204,6 +208,7 @@ public:
     0 >> idex_reg->fp_reg_do_write_in;
     0 >> idex_reg->data_mem_wr_src_ctrl_in;
     0 >> idex_reg->falu_ctrl_in;
+    0 >> idex_reg->emissionCycle_in;
 
     // -----------------------------------------------------------------------
     // EX/MEM
@@ -477,7 +482,14 @@ public:
     m_syscallExitCycle = -1;
   }
 
-  static ProcessorISAInfo supportsISA() { return RVISA::supportsISA<XLEN>(); }
+  static ProcessorISAInfo supportsISA() {
+    auto isaInfo = RVISA::supportsISA<XLEN>();
+    isaInfo.supportedExtensions.removeAll("F");
+    isaInfo.supportedExtensions.removeAll("D");
+    isaInfo.defaultExtensions.removeAll("F");
+    isaInfo.defaultExtensions.removeAll("D");
+    return isaInfo;
+  }
   std::shared_ptr<ISAInfoBase> implementsISA() const override {
     return m_enabledISA;
   }

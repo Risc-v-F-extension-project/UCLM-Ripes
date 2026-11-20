@@ -33,6 +33,9 @@ public:
     CONNECT_REGISTERED_CLEN_INPUT(data_mem_wr_src_ctrl, this->clear,this->enable);
     CONNECT_REGISTERED_CLEN_INPUT(falu_ctrl, this->clear, this->enable);
 
+    // Ciclo de emisión hacia MEM asignado por la Hazard Unit.
+    CONNECT_REGISTERED_CLEN_INPUT(emissionCycle, this->clear, this->enable);
+
     // We want stalling info to persist through clearing of the register, so
     // stalled register is always enabled and never cleared.
     CONNECT_REGISTERED_CLEN_INPUT(stalled, 0, 1);
@@ -47,6 +50,8 @@ public:
   REGISTERED_CLEN_INPUT(fp_reg_do_write, 1);
   REGISTERED_CLEN_INPUT(data_mem_wr_src_ctrl, enumBitWidth<DataMemWrSrc>());
   REGISTERED_CLEN_INPUT(falu_ctrl, enumBitWidth<FALUOp>());
+
+  REGISTERED_CLEN_INPUT(emissionCycle, 64);
 
   REGISTERED_CLEN_INPUT(stalled, 1);
 };

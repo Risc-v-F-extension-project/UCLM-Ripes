@@ -3,6 +3,7 @@
 #include "processors/RISC-V/riscv.h"
 
 #include "VSRTL/core/vsrtl_component.h"
+#include <array>
 
 namespace Ripes {
 enum class ForwardingSrc { IdStage, MemStage, WbStage };
@@ -63,6 +64,15 @@ public:
         return ForwardingSrc::IdStage;
       }
     };
+  }
+
+  std::array<ForwardingSrc, 2> operandSources(bool floatingPoint) const {
+    if (floatingPoint) {
+      return {falu_reg1_forwarding_ctrl.eValue<ForwardingSrc>(),
+              falu_reg2_forwarding_ctrl.eValue<ForwardingSrc>()};
+    }
+    return {alu_reg1_forwarding_ctrl.eValue<ForwardingSrc>(),
+            alu_reg2_forwarding_ctrl.eValue<ForwardingSrc>()};
   }
 
   INPUTPORT(id_reg1_idx, c_RVRegsBits);
