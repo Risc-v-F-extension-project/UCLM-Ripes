@@ -16,6 +16,7 @@ class PipelineDiagramWidget : public QDialog {
 public:
   PipelineDiagramWidget(PipelineDiagramModel *model, QWidget *parent = nullptr);
   ~PipelineDiagramWidget() override;
+  void prepareForView();
 
 private slots:
   void on_copy_clicked();
@@ -23,5 +24,8 @@ private slots:
 private:
   Ui::PipelineDiagramWidget *m_ui = nullptr;
   PipelineDiagramModel *m_stageModel = nullptr;
+  int m_preparedColumns = -1;
+  int m_preparedRows = -1;
+  unsigned long long m_preparedGeneration = 0;
 };
 } // namespace Ripes

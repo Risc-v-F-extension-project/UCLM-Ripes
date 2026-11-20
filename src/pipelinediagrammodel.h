@@ -9,6 +9,8 @@ class PipelineDiagramModel : public QAbstractTableModel {
   Q_OBJECT
 public:
   enum Column { Breakpoint = 0, PC = 1, Stage = 2, Instruction = 3, NColumns };
+  enum DataRole { ForwardingRole = Qt::UserRole + 1 };
+  enum ForwardingState { NoForwarding, Producer, Consumer };
   PipelineDiagramModel(QObject *parent = nullptr);
 
   int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -19,6 +21,7 @@ public:
   QVariant headerData(int section, Qt::Orientation orientation,
                       int role = Qt::DisplayRole) const override;
   void prepareForView();
+  uint64_t historyGeneration() const { return m_historyGeneration; }
 
   /// Returns a tab-separated stringified version of this pipeline diagram.
   QString toString() const;
@@ -35,6 +38,9 @@ private:
    * map<cycle, map<stageId, stageInfo>>
    */
   std::map<long long, std::map<StageIndex, StageInfo>> m_cycleStageInfos;
+  std::map<long long, std::vector<FPUnicicleStageInfo>>
+      m_cycleFPStageInfos;
+  std::map<long long, std::vector<OperandForwardingInfo>> m_cycleForwardingInfos;
 
   /**
    * @brief m_atMaxCycles
@@ -44,5 +50,6 @@ private:
    * the value has been reached.
    */
   bool m_atMaxCycles = false;
+  uint64_t m_historyGeneration = 0;
 };
 } // namespace Ripes
