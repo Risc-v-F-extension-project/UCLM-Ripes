@@ -158,7 +158,7 @@ ProcessorTab::ProcessorTab(QToolBar *controlToolbar,
               const auto cycle =
                   ProcessorHandler::getProcessor()->getCycleCount();
               m_targetCycle->setValue(static_cast<int>(std::min<long long>(
-                  cycle, std::numeric_limits<int>::max())));
+                  cycle + 1, std::numeric_limits<int>::max())));
             }
           });
 
@@ -331,12 +331,12 @@ void ProcessorTab::setupSimulatorActions(QToolBar *controlToolbar) {
   controlToolbar->addAction(m_runAction);
 
   m_targetCycle = new QSpinBox(this);
-  m_targetCycle->setRange(0, std::numeric_limits<int>::max());
+  m_targetCycle->setRange(1, std::numeric_limits<int>::max());
   m_targetCycle->setPrefix("cycle ");
   m_targetCycle->setToolTip("Target cycle");
   if (const auto *processor = ProcessorHandler::getProcessor()) {
     m_targetCycle->setValue(static_cast<int>(std::min<long long>(
-        processor->getCycleCount(), std::numeric_limits<int>::max())));
+        processor->getCycleCount() + 1, std::numeric_limits<int>::max())));
   }
   controlToolbar->addWidget(m_targetCycle);
 
@@ -769,7 +769,8 @@ void ProcessorTab::goToCycle() {
   if (vsrtlProcessor)
     vsrtlProcessor->setEnableSignals(false);
 
-  const long long target = m_targetCycle->value();
+  const long long target =
+      static_cast<long long>(m_targetCycle->value()) - 1;
   if (target < processor->getCycleCount()) {
     const long long distance = processor->getCycleCount() - target;
     const long long stackSize =
@@ -809,7 +810,7 @@ void ProcessorTab::goToCycle() {
   else
     enableSimulatorControls();
   m_targetCycle->setValue(static_cast<int>(std::min<long long>(
-      processor->getCycleCount(), std::numeric_limits<int>::max())));
+      processor->getCycleCount() + 1, std::numeric_limits<int>::max())));
   requestFPUnicicleDiagramRefresh(true);
 }
 
