@@ -36,3 +36,8 @@ target_compile_definitions(tst_riscv_fp_functional PRIVATE
 create_qtest(tst_riscv_fp_control)
 target_compile_definitions(tst_riscv_fp_control PRIVATE
     RIPES_FP_CONTROL_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fp-control")
+
+# Complete FP programs with their result checks implemented in assembly.
+create_qtest(tst_riscv_fp_integration)
+target_compile_definitions(tst_riscv_fp_integration PRIVATE
+    RIPES_FP_INTEGRATION_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fp-integration")
