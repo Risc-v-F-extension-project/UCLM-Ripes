@@ -31,3 +31,8 @@ create_qtest(tst_cpu_selection)
 create_qtest(tst_riscv_fp_functional)
 target_compile_definitions(tst_riscv_fp_functional PRIVATE
     RIPES_FP_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fp-functional")
+
+# Control-flow checks for each of the six adapted five-stage configurations.
+create_qtest(tst_riscv_fp_control)
+target_compile_definitions(tst_riscv_fp_control PRIVATE
+    RIPES_FP_CONTROL_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fp-control")
