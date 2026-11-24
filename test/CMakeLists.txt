@@ -26,3 +26,8 @@ create_qtest(tst_expreval)
 create_qtest(tst_cosimulate)
 create_qtest(tst_reverse)
 create_qtest(tst_cpu_selection)
+
+# Independent functional suite for the implemented F/D subset.
+create_qtest(tst_riscv_fp_functional)
+target_compile_definitions(tst_riscv_fp_functional PRIVATE
+    RIPES_FP_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/fp-functional")
