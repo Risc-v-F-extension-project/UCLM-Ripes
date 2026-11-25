@@ -29,7 +29,7 @@ private slots:
     RipesSettings::setValue(RIPES_SETTING_ASSEMBLER_DATASTART, 0x10000000);
     RipesSettings::setValue(RIPES_SETTING_RV5S_FALU_ADDSUB_LATENCY, 4);
     RipesSettings::setValue(RIPES_SETTING_RV5S_FALU_MUL_LATENCY, 7);
-    RipesSettings::setValue(RIPES_SETTING_RV5S_FALU_DIV_LATENCY, 10);
+    RipesSettings::setValue(RIPES_SETTING_RV5S_FALU_DIV_LATENCY, 25);
 
   }
 
